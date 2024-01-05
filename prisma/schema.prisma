@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROLE {
+  ADMINISTRATOR
+  USER
+
+}
+
+
+enum AUTH_ACTION {
+  LOGIN
+  ACCOUNT_VERIFICATION
+}
+
+
+model User {
+  id String @id  @default(uuid()) @db.Uuid
+  firstName String @db.VarChar(50) @map("first_name")
+  lastName String @db.VarChar(50) @map("last_name")
+  emailAddress String @unique @db.VarChar(50) @map("email_address")
+  phoneNumber String @unique @db.VarChar(20) @map("phone_number")
+  createdAt DateTime @default(now()) @db.Timestamptz() @map("created_at")
+  updatedAt DateTime @updatedAt @default(now()) @db.Timestamptz() @map("updated_at")
+  authentication UserAuthentication?  
+  @@index([emailAddress, phoneNumber])
+
+  @@map("users")
+}
+
+model UserAuthentication {
+  id String @id  @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid @map("user_id")
+  password String @db.VarChar(100) @map("password")
+  active Boolean @default(false) @map("active")
+  has2fa Boolean @default(false) @map("has_2fa")
+  role ROLE @default(USER) @map("role")
+  user User? @relation(fields: [userId], references: [id])
+  userAuthVerification UserAuthVerification?
+  createdAt DateTime @default(now()) @db.Timestamptz() @map("created_at")
+  updatedAt DateTime @updatedAt @default(now()) @db.Timestamptz() @map("updated_at")
+  @@index([userId])
+  @@map("user_authentications")
+}
+
+
+model UserAuthVerification{
+  id String @id  @default(uuid()) @db.Uuid
+  authenticationId String @unique @db.Uuid @map("authentication_id")
+  code String @db.VarChar(100) @map("password")
+  expiry DateTime @db.Timestamptz()
+  action AUTH_ACTION @default(LOGIN)
+  authentication UserAuthentication? @relation(fields: [authenticationId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz() @map("created_at")
+  updatedAt DateTime @updatedAt @default(now()) @db.Timestamptz() @map("updated_at")
+
+  @@index([authenticationId])
+  @@map("user_auth_verifications")
+}
