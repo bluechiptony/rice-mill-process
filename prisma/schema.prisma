@@ -56,7 +56,7 @@ model UserAuthentication {
 model UserAuthVerification{
   id String @id  @default(uuid()) @db.Uuid
   authenticationId String @unique @db.Uuid @map("authentication_id")
-  code String @db.VarChar(100) @map("password")
+  code String @db.VarChar(100) @map("code")
   expiry DateTime @db.Timestamptz()
   action AUTH_ACTION @default(LOGIN)
   authentication UserAuthentication? @relation(fields: [authenticationId], references: [id])
