@@ -26,6 +26,8 @@
     "@nestjs/swagger": "^7.1.17",
     "@prisma/client": "^5.7.1",
     "argon2": "^0.31.2",
+    "csurf": "^1.11.0",
+    "helmet": "^7.1.0",
     "nest-winston": "^1.9.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
