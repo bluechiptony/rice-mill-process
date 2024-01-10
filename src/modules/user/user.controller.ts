@@ -1,9 +1,14 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
+import { ResponseMessages } from 'src/constants/messages/response.messages';
+import { UserDTO } from 'src/dto';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private responseMessages: ResponseMessages,
+  ) {}
 
   @Get('retrieve/user/:id')
   getUser(@Param('id') id: string) {
@@ -22,5 +27,25 @@ export class UserController {
   @Get('search')
   searchUsers(@Query('search') search: string) {
     return this.userService.searchUsers(search);
+  }
+
+  @Post('create')
+  async createUser(@Body() userDTO: UserDTO) {
+    const user = await this.userService.createUser(userDTO);
+
+    return {
+      message: this.responseMessages.Users.USER_CREATED_SUCCESSFULLY,
+      data: user,
+    };
+  }
+
+  @Post('update')
+  async updateUser(@Body() userDTO: UserDTO) {
+    const user = await this.userService.updateUser(userDTO);
+    if (user) {
+      return {
+        message: this.responseMessages.Users.USER_CREATED_SUCCESSFULLY,
+      };
+    }
   }
 }

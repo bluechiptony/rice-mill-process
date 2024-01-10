@@ -1,7 +1,7 @@
 {
-  "name": "coren-portal-api",
+  "name": "nanoscale-nestjs-base",
   "version": "0.0.1",
-  "description": "",
+  "description": "Base API for Nest JS projects",
   "author": "Nanoscale limited ",
   "private": true,
   "license": "UNLICENSED",

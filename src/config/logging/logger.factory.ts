@@ -5,7 +5,7 @@ export default class LoggerFactory {
   static consoleFormat: Logform.Format;
   static DEBUG = process.env.DEBUG;
   static USE_JSON_LOGGER = process.env.USE_JSON_LOGGER;
-  static APP_NAME = 'COREN Hub API';
+  static APP_NAME = 'NANOSCALE BASE API';
 
   static createLogger() {
     if (this.USE_JSON_LOGGER) {
