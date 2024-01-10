@@ -18,4 +18,35 @@ export class UserRepository {
       },
     });
   }
+
+  async getUsers(page: number, size: number) {
+    return this.prisma.user.findMany({ skip: page, take: size });
+  }
+
+  async searchUsers(searchString: string) {
+    return this.prisma.user.findMany({
+      where: {
+        OR: [
+          {
+            firstName: {
+              contains: searchString,
+              mode: 'insensitive',
+            },
+          },
+          {
+            lastName: {
+              contains: searchString,
+              mode: 'insensitive',
+            },
+          },
+          {
+            emailAddress: {
+              contains: searchString,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
+  }
 }
