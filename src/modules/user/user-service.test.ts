@@ -1,8 +1,8 @@
 import { UserService } from './user.service';
-import { UserRepository } from '../../repositories/user.repository';
+import { UserRepository } from 'src/repositories/user.repository';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ErrorMessages } from '../../constants/errors';
-import { ResourceExistsException } from '../../../src/exceptions';
+import { ErrorMessages } from 'src/constants/errors';
+import { ResourceExistsException } from 'src/exceptions';
 
 describe('User Service Tests', () => {
   let userService: UserService;

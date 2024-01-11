@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { ErrorMessages } from '../../constants/errors';
-import { UserDTO } from '../../dto';
+import { ErrorMessages } from 'src/constants/errors';
+import { UserDTO } from 'src/dto';
 import {
   ResourceExistsException,
   ResourceNotFoundException,
-} from '../../exceptions';
-import { UserRepository } from '../../repositories/user.repository';
+} from 'src/exceptions';
+import { UserRepository } from 'src/repositories/user.repository';
 
 @Injectable()
 export class UserService {
