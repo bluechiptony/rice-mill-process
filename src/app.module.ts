@@ -7,11 +7,21 @@ import { UserController } from './modules/user/user.controller';
 import { UserService } from './modules/user/user.service';
 import { RepositoryModule } from './repositories/repository.module';
 import { RequestLoggerMiddleware } from './middleware/request-logger.middleware';
+import { ErrorMessages } from './constants/errors';
+import { ResponseMessages } from './constants/messages';
+import { APP_FILTER } from '@nestjs/core';
+import { NanoscaleExceptionFilter } from './filters/exception.filter';
 
 @Module({
   imports: [PrismaModule, UserModule, RepositoryModule],
   controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  providers: [
+    { provide: APP_FILTER, useClass: NanoscaleExceptionFilter },
+    AppService,
+    UserService,
+    ErrorMessages,
+    ResponseMessages,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

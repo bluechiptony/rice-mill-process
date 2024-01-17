@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import LoggerFactory from './config/logging/logger.factory';
-import * as csurf from 'csurf';
+// import * as csurf from 'csurf';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 
@@ -12,14 +12,14 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
-  app.use(csurf({ cookie: true }));
+  // app.use(csurf({ cookie: true }));
   app.enableCors();
   app.use(helmet());
 
   const config = new DocumentBuilder()
-    .setTitle('COREN Hub API')
+    .setTitle('NANOSCALE BASE API')
     .setVersion('1.0')
-    .setDescription('COREN Hub Rest API')
+    .setDescription('Nanoscale Base Rest API')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
