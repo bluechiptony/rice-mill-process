@@ -11,9 +11,19 @@ import { ErrorMessages } from './constants/errors';
 import { ResponseMessages } from './constants/messages';
 import { APP_FILTER } from '@nestjs/core';
 import { NanoscaleExceptionFilter } from './filters/exception.filter';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { AuthVerificationModule } from './modules/auth-verification/auth-verification.module';
+import { UtilsModule } from './modules/utils/utils.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, RepositoryModule],
+  imports: [
+    PrismaModule,
+    UserModule,
+    RepositoryModule,
+    AuthenticationModule,
+    AuthVerificationModule,
+    UtilsModule,
+  ],
   controllers: [AppController, UserController],
   providers: [
     { provide: APP_FILTER, useClass: NanoscaleExceptionFilter },

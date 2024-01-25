@@ -48,4 +48,14 @@ export class UserController {
       };
     }
   }
+
+  @Post('sign-up')
+  async signUpUser(@Body() userDTO: UserDTO) {
+    const user = await this.userService.signUpUser(userDTO);
+    if (user) {
+      return {
+        message: this.responseMessages.Users.USER_CREATED_SUCCESSFULLY,
+      };
+    }
+  }
 }
