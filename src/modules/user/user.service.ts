@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { AUTH_ACTION, User } from '@prisma/client';
 import { ErrorMessages } from 'src/constants/errors';
 import { UserDTO } from 'src/dto';
 import {
@@ -7,6 +7,8 @@ import {
   ResourceNotFoundException,
 } from 'src/exceptions';
 import { UserRepository } from 'src/repositories/user.repository';
+import { FullUserCreationDto } from 'src/types';
+import { StringGenUtilService } from '../utils/string-gen-util/string-gen-util.service';
 
 @Injectable()
 export class UserService {
@@ -14,6 +16,7 @@ export class UserService {
   private logger = new Logger(this.SERVICE_NAME);
   constructor(
     private userRepository: UserRepository,
+    private stringUtilService: StringGenUtilService,
     private errorMessages: ErrorMessages,
   ) {}
 
@@ -88,6 +91,56 @@ export class UserService {
         userFound.id
       } - [User Update]:  successful with : ${JSON.stringify(userFound)}`,
     );
+    return userFound;
+  }
+
+  async signUpUser(user: UserDTO): Promise<User> {
+    // check id user exists by phone  and email
+
+    let userFound: User = await this.userRepository.getUserWithBasicContact({
+      phoneNumber: user.phoneNumber,
+      emailAddress: user.emailAddress,
+    });
+
+    this.logger.log('userFound');
+    this.logger.log(userFound);
+
+    if (userFound) {
+      //throw exception
+      throw new ResourceExistsException({
+        message: this.errorMessages.User.USER_ALREADY_EXISTS,
+        status: 400,
+        description: `User ${user.emailAddress} - [User Creation]: User exists on database`,
+      });
+    }
+
+    const fullUser: FullUserCreationDto = {
+      user: user,
+      authentication: {
+        password: this.stringUtilService.randomAlpha(10),
+        active: false,
+        role: user.role,
+        has2fa: false,
+      },
+      userAuthVerification: {
+        action: AUTH_ACTION.ACCOUNT_VERIFICATION,
+        code: this.stringUtilService.randomAlpha(64),
+        expiry: new Date(),
+      },
+    };
+    // if user exists throw exception
+    userFound = await this.userRepository.createUserAndAuthentication(fullUser);
+
+    //send email to user
+
+    this.logger.log(
+      `User ${
+        userFound.id
+      } - [User & Auth Creation]:  successful with : ${JSON.stringify(
+        userFound,
+      )}`,
+    );
+    // save user
     return userFound;
   }
 }

@@ -5,6 +5,7 @@ import { UserService } from './user.service';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { ErrorMessages } from 'src/constants/errors';
 import { ResponseMessages } from 'src/constants/messages/response.messages';
+import { UtilsModule } from '../utils/utils.module';
 
 @Module({
   controllers: [UserController],
@@ -15,5 +16,6 @@ import { ResponseMessages } from 'src/constants/messages/response.messages';
     ErrorMessages,
     ResponseMessages,
   ],
+  imports: [UtilsModule],
 })
 export class UserModule {}

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { AUTH_ACTION, ROLE, User } from '@prisma/client';
 import { PrismaService } from '../../src/config/prisma/prisma.service';
 import { UserDTO } from '../../src/dto';
-import { BasicContact } from '../../src/types';
+import { BasicContact, FullUserCreationDto } from '../../src/types';
 
 @Injectable()
 export class UserRepository {
@@ -47,16 +47,19 @@ export class UserRepository {
   }
 
   async getUserWithBasicContact(contact: BasicContact) {
+    console.log(contact);
     return this.prisma.user.findFirst({
       where: {
         OR: [
           {
-            emailAddress: {
-              startsWith: contact.emailAddress,
-              mode: 'insensitive',
-            },
             phoneNumber: {
               startsWith: contact.phoneNumber,
+              mode: 'insensitive',
+            },
+          },
+          {
+            emailAddress: {
+              startsWith: contact.emailAddress,
               mode: 'insensitive',
             },
           },
@@ -92,6 +95,33 @@ export class UserRepository {
             },
           },
         ],
+      },
+    });
+  }
+
+  async createUserAndAuthentication(user: FullUserCreationDto): Promise<User> {
+    return this.prisma.user.create({
+      data: {
+        firstName: user.user.firstName,
+        lastName: user.user.lastName,
+        emailAddress: user.user.emailAddress,
+        phoneNumber: user.user.phoneNumber,
+        authentication: {
+          create: {
+            active: false,
+            role: user.authentication.role as unknown as ROLE,
+            password: user.authentication.password,
+            has2fa: user.authentication.has2fa,
+            userAuthVerification: {
+              create: {
+                action: user.userAuthVerification
+                  .action as unknown as AUTH_ACTION,
+                code: user.userAuthVerification.code,
+                expiry: user.userAuthVerification.expiry,
+              },
+            },
+          },
+        },
       },
     });
   }

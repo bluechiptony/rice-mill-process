@@ -4,8 +4,5 @@ export class UserDTO {
   lastName: string;
   emailAddress: string;
   phoneNumber: string;
+  role?: string;
 }
-
-//   export class UpdateUserDto extends PartialType(CreateUserDto) {
-
-//   }
