@@ -17,9 +17,9 @@ async function bootstrap() {
   app.use(helmet());
 
   const config = new DocumentBuilder()
-    .setTitle('NANOSCALE BASE API')
+    .setTitle('PHINADA MILL API')
     .setVersion('1.0')
-    .setDescription('Nanoscale Base Rest API')
+    .setDescription('Phinada Mill Rest API')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
