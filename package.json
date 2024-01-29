@@ -1,8 +1,8 @@
 {
-  "name": "nanoscale-nestjs-base",
+  "name": "phinada-base-rest-api",
   "version": "0.0.1",
   "description": "Base API for Nest JS projects",
-  "author": "Nanoscale limited ",
+  "author": "Bluechiptony ",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
